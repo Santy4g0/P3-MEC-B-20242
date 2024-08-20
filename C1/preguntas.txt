@@ -75,41 +75,14 @@ public class Main {
         h.mostrarMensaje();
     }
 }
-6.	Verdadero o Falso:
-En Java, el concepto de encapsulación se logra mediante el uso de modificadores de acceso como private, protected y public.
 
-A) Verdadero
-B) Falso
-Respuesta: A
-7.	Verdadero o Falso:
-En Java, un atributo declarado como private es accesible desde cualquier otra clase que esté en el mismo paquete.
-A) Verdadero
-B) Falso
-Respuesta: B
-8.	Completa el siguiente enunciado con la palabra correcta:
-En Java, los atributos que se declaran con el modificador de acceso __________ solo son accesibles dentro de la misma clase en la que están definidos.
-A) public
-B) protected
-C) private
-D) static
-Respuesta: C
-  9. Completa el siguiente enunciado con la palabra correcta:
-En Java, una __________ es una plantilla que define los atributos y métodos que los objetos creados a partir de ella tendrán, pero no se puede instanciar directamente si es __________.
-
-A) interfaz / abstracta
-B) clase / final
-C) clase / abstracta
-D) objeto / estática
-Respuesta: C
-
-
-
-
-
-
-
-
-10. Examina el siguiente código Java y señala cuál es el error:
+##En Java, el concepto de encapsulación se logra mediante el uso de modificadores de acceso como private, protected y public.{t}
+##En Java, un atributo declarado como private es accesible desde cualquier otra clase que esté en el mismo paquete.{f}
+##Completa el siguiente enunciado con la palabra correcta:
+En Java, los atributos que se declaran con el modificador de acceso <<private>> solo son accesibles dentro de la misma clase en la que están definidos.
+##Completa el siguiente enunciado con la palabra correcta:
+En Java, una <<clase>> es una plantilla que define los atributos y métodos que los objetos creados a partir de ella tendrán, pero no se puede instanciar directamente si <<abstracta>>.
+##Examina el siguiente código Java y señala cuál es el error:
 public class Coche {
     private String color;
 
@@ -130,9 +103,8 @@ public class Main {
         c.setColor(123);
     }
 }
-A) El método setColor no puede ser static.
-B) El método setColor no puede aceptar un tipo int.
-C) c.getColor debe ser c.getColor().
-D) El atributo color debería ser public.
-
- Respuesta: B
+El error es:
+~El método setColor no puede ser static.
+=El método setColor no puede aceptar un tipo int.
+~c.getColor debe ser c.getColor().
+~El atributo color debería ser public.
