@@ -5,7 +5,7 @@
 public class Main {
     public static void main(String[] args) {
       public class triangulo 
-              ublic class Fraccion {
+             
 
     private int base;
     private int altura;
