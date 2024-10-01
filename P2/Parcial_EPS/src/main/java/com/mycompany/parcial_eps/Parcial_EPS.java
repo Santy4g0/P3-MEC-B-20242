@@ -8,17 +8,19 @@ package com.mycompany.parcial_eps;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-/**Parcial_EPS
+/**
  *
  * @author Juan David Ruiz Gomez, Elkin Santiago Ruiz Rodriguez
  */
+
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Parcial_EPS extends JFrame {
 
@@ -30,7 +32,7 @@ public class Parcial_EPS extends JFrame {
     private DefaultTableModel modeloGeneral, modeloEspecializada, modeloLaboratorio, modeloImagenes;
     private JSlider sliderTiempo;
     private JLabel lblEstadoCola, lblProximaAtencion;
-    
+
     // Colas por categorías de servicio
     private Queue<Paciente> colaConsultaGeneral;
     private Queue<Paciente> colaConsultaEspecializada;
@@ -43,10 +45,10 @@ public class Parcial_EPS extends JFrame {
 
     public Parcial_EPS() {
         setTitle("Simulación Atención en EPS");
-        setSize(900, 600);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Pantalla completa
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setLayout(new BorderLayout());
 
         // Inicializar las colas
         colaConsultaGeneral = new LinkedList<>();
@@ -54,91 +56,104 @@ public class Parcial_EPS extends JFrame {
         colaPruebaLaboratorio = new LinkedList<>();
         colaImagenesDiagnosticas = new LinkedList<>();
 
+        // Panel principal
+        JPanel panelPrincipal = new JPanel();
+        panelPrincipal.setLayout(new GridBagLayout());
+        add(panelPrincipal, BorderLayout.CENTER);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(10, 10, 10, 10);
+
         // Componentes
-        JLabel lblCedula = new JLabel("Cédula:");
-        lblCedula.setBounds(20, 20, 100, 30);
-        add(lblCedula);
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.weighty = 0.1; // Espacio para los campos
+        panelPrincipal.add(new JLabel("Registro de Pacientes"), gbc);
 
-        txtCedula = new JTextField();
-        txtCedula.setBounds(100, 20, 150, 30);
-        add(txtCedula);
+        gbc.weighty = 0.1;
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
+        panelPrincipal.add(new JLabel("Cédula:"), gbc);
 
-        JLabel lblCategoria = new JLabel("Categoría:");
-        lblCategoria.setBounds(20, 60, 100, 30);
-        add(lblCategoria);
+        gbc.gridx = 1;
+        txtCedula = new JTextField(15);
+        panelPrincipal.add(txtCedula, gbc);
 
+        gbc.gridx = 0; gbc.gridy = 2;
+        panelPrincipal.add(new JLabel("Categoría:"), gbc);
+
+        gbc.gridx = 1;
         cmbCategoria = new JComboBox<>(new String[]{
                 "Menor de 60 años", 
                 "Adulto mayor", 
                 "Persona con discapacidad"
         });
-        cmbCategoria.setBounds(100, 60, 200, 30);
-        add(cmbCategoria);
+        panelPrincipal.add(cmbCategoria, gbc);
 
-        JLabel lblServicio = new JLabel("Servicio:");
-        lblServicio.setBounds(20, 100, 100, 30);
-        add(lblServicio);
+        gbc.gridx = 0; gbc.gridy = 3;
+        panelPrincipal.add(new JLabel("Servicio:"), gbc);
 
-        // Servicios disponibles
+        gbc.gridx = 1;
         cmbServicio = new JComboBox<>(new String[]{
                 "Consulta médica general",
                 "Consulta médica especializada",
                 "Prueba de laboratorio",
                 "Imágenes diagnósticas"
         });
-        cmbServicio.setBounds(100, 100, 200, 30);
-        add(cmbServicio);
+        panelPrincipal.add(cmbServicio, gbc);
 
+        gbc.gridx = 1; gbc.gridy = 4;
         btnRegistrar = new JButton("Registrar Paciente");
-        btnRegistrar.setBounds(100, 140, 150, 30);
-        add(btnRegistrar);
+        panelPrincipal.add(btnRegistrar, gbc);
 
         // Tablas para cada servicio
-        modeloGeneral = new DefaultTableModel(new Object[]{"Cédula", "Categoría", "Hora de llegada"}, 0);
+        modeloGeneral = new DefaultTableModel(new Object[]{"Cédula", "Condición", "Hora de llegada"}, 0);
         tblGeneral = new JTable(modeloGeneral);
         JScrollPane scrollGeneral = new JScrollPane(tblGeneral);
-        scrollGeneral.setBounds(320, 20, 250, 100);
-        add(scrollGeneral);
+        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        gbc.weighty = 0.2;
+        panelPrincipal.add(scrollGeneral, gbc);
 
-        modeloEspecializada = new DefaultTableModel(new Object[]{"Cédula", "Categoría", "Hora de llegada"}, 0);
+        modeloEspecializada = new DefaultTableModel(new Object[]{"Cédula", "Condición", "Hora de llegada"}, 0);
         tblEspecializada = new JTable(modeloEspecializada);
         JScrollPane scrollEspecializada = new JScrollPane(tblEspecializada);
-        scrollEspecializada.setBounds(320, 140, 250, 100);
-        add(scrollEspecializada);
+        gbc.gridy = 6;
+        panelPrincipal.add(scrollEspecializada, gbc);
 
-        modeloLaboratorio = new DefaultTableModel(new Object[]{"Cédula", "Categoría", "Hora de llegada"}, 0);
+        modeloLaboratorio = new DefaultTableModel(new Object[]{"Cédula", "Condición", "Hora de llegada"}, 0);
         tblLaboratorio = new JTable(modeloLaboratorio);
         JScrollPane scrollLaboratorio = new JScrollPane(tblLaboratorio);
-        scrollLaboratorio.setBounds(320, 260, 250, 100);
-        add(scrollLaboratorio);
+        gbc.gridy = 7;
+        panelPrincipal.add(scrollLaboratorio, gbc);
 
-        modeloImagenes = new DefaultTableModel(new Object[]{"Cédula", "Categoría", "Hora de llegada"}, 0);
+        modeloImagenes = new DefaultTableModel(new Object[]{"Cédula", "Condición", "Hora de llegada"}, 0);
         tblImagenes = new JTable(modeloImagenes);
         JScrollPane scrollImagenes = new JScrollPane(tblImagenes);
-        scrollImagenes.setBounds(320, 380, 250, 100);
-        add(scrollImagenes);
+        gbc.gridy = 8;
+        panelPrincipal.add(scrollImagenes, gbc);
 
         // Control deslizante para ajustar el tiempo
-        JLabel lblTiempo = new JLabel("Ajustar tiempo:");
-        lblTiempo.setBounds(20, 200, 200, 30);
-        add(lblTiempo);
+        gbc.gridx = 0; gbc.gridy = 9; gbc.gridwidth = 1;
+        panelPrincipal.add(new JLabel("Ajustar tiempo:"), gbc);
 
-        sliderTiempo = new JSlider(JSlider.HORIZONTAL, -1000, 1000, 0); // Ajuste para tiempo
-        sliderTiempo.setBounds(20, 230, 200, 50);
+        gbc.gridx = 1;
+        sliderTiempo = new JSlider(JSlider.HORIZONTAL, -1000, 1000, 0);
         sliderTiempo.setMajorTickSpacing(500);
         sliderTiempo.setPaintTicks(true);
         sliderTiempo.setPaintLabels(true);
-        add(sliderTiempo);
+        panelPrincipal.add(sliderTiempo, gbc);
 
         // Estado de la cola
+        gbc.gridx = 0; gbc.gridy = 10; gbc.gridwidth = 2;
         lblEstadoCola = new JLabel("Pacientes en cola: 0");
-        lblEstadoCola.setBounds(20, 300, 300, 30);
-        add(lblEstadoCola);
+        panelPrincipal.add(lblEstadoCola, gbc);
 
         // Cuadro de próxima atención
+        gbc.gridy = 11; gbc.weighty = 0.2; // Mayor espacio para la próxima atención
+        JPanel panelProximaAtencion = new JPanel();
+        panelProximaAtencion.setBorder(BorderFactory.createTitledBorder("Próxima atención"));
         lblProximaAtencion = new JLabel("Próxima atención: ");
-        lblProximaAtencion.setBounds(20, 340, 300, 50);
-        add(lblProximaAtencion);
+        panelProximaAtencion.add(lblProximaAtencion);
+        panelProximaAtencion.setPreferredSize(new Dimension(400, 100));
+        panelPrincipal.add(panelProximaAtencion, gbc);
 
         // Listeners
         btnRegistrar.addActionListener(new ActionListener() {
@@ -209,6 +224,10 @@ public class Parcial_EPS extends JFrame {
 
     // Atender pacientes según las colas
     private void atenderPacientes() {
+        if (totalPacientesEnCola() < 10) {
+            return; // No atender hasta que haya al menos 10 pacientes en cola
+        }
+
         Paciente pacienteAtendido = null;
 
         // Atender de la cola de "Consulta médica general"
@@ -239,6 +258,10 @@ public class Parcial_EPS extends JFrame {
         actualizarEstadoCola();
     }
 
+    private int totalPacientesEnCola() {
+        return colaConsultaGeneral.size() + colaConsultaEspecializada.size() + colaPruebaLaboratorio.size() + colaImagenesDiagnosticas.size();
+    }
+
     // Simular la duración del servicio
     private void simularDuracionServicio(Paciente paciente, int duracionMinutos) {
         long tiempoEspera = (System.currentTimeMillis() - paciente.getHoraLlegada()) / 60000;
@@ -248,7 +271,7 @@ public class Parcial_EPS extends JFrame {
 
     // Actualizar el estado de la cola en la interfaz
     private void actualizarEstadoCola() {
-        int totalPacientes = colaConsultaGeneral.size() + colaConsultaEspecializada.size() + colaPruebaLaboratorio.size() + colaImagenesDiagnosticas.size();
+        int totalPacientes = totalPacientesEnCola();
         lblEstadoCola.setText("Pacientes en cola: " + totalPacientes);
     }
 
@@ -290,7 +313,6 @@ public class Parcial_EPS extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Parcial_EPS();
+        SwingUtilities.invokeLater(Parcial_EPS::new);
     }
 }
-
